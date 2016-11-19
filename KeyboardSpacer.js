@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
 export default class KeyboardSpacer extends Component {
   static propTypes = {
     topSpacing: PropTypes.number,
+    topSpacingAndroid:PropTypes.number,
     onToggle: PropTypes.func,
     style: View.propTypes.style,
     animationConfig: PropTypes.object,
@@ -28,6 +29,7 @@ export default class KeyboardSpacer extends Component {
 
   static defaultProps = {
     topSpacing: 0,
+    topSpacingAndroid: 0,
     // From: https://medium.com/man-moon/writing-modern-react-native-ui-e317ff956f02
     animationConfig: {
       duration: 500,
@@ -78,7 +80,10 @@ export default class KeyboardSpacer extends Component {
     if (!frames.endCoordinates) {
       return;
     }
-    const keyboardSpace = frames.endCoordinates.height + this.props.topSpacing;
+    const keyboardSpace = Platform.select({
+      ios: (frames.endCoordinates.height + this.props.topSpacing), 
+      android: this.props.topSpacing + this.props.topSpacingAndroid
+    })
     this.setState({
       keyboardSpace,
       isKeyboardOpened: true
